@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eco Footprint Journal</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<!--  Navbar Section -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🌿 Eco Footprint Journal</a>
+            <ul class="nav-menu" id="nav-links">
+                 <!-- JS dynamic-ah links add pannum (Login/Signup or Home/Logout) -->
+            </ul>
+        </div>
+    </nav> 
+ 
+
+
+<!-- <h2 class="sr-only">Eco Footprint Journal - Track your daily carbon footprint, set goals, earn badges, and get AI-powered green suggestions.</h2> -->
+
+
+<div class="app">
+
+<div class="topbar">
+  <div class="topbar-title">
+    <i class="ti ti-leaf" aria-hidden="true" style="font-size:20px;color:var(--eco-green)"></i>
+    <!-- Eco Footprint Journal -->
+  </div>
+  <div class="topbar-score">
+    <span>Eco Score</span>
+    <span class="score-badge" id="topScore">72 / 100</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</button>
+  <button class="nav-btn" onclick="showPage('log')"><i class="ti ti-pencil" aria-hidden="true"></i> Log Activity</button>
+  <button class="nav-btn" onclick="showPage('goals')"><i class="ti ti-target" aria-hidden="true"></i> Goals</button>
+  <button class="nav-btn" onclick="showPage('badges')"><i class="ti ti-award" aria-hidden="true"></i> Badges</button>
+  <button class="nav-btn" onclick="showPage('leaderboard')"><i class="ti ti-trophy" aria-hidden="true"></i> Leaderboard</button>
+  <button class="nav-btn" onclick="showPage('ai')"><i class="ti ti-sparkles" aria-hidden="true"></i> AI Tips</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="grid4">
+    <div class="metric-card">
+      <div class="metric-label">Today</div>
+      <div class="metric-value" id="todayCO2">4.2</div>
+      <div class="metric-unit">kg CO₂</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">This Week</div>
+      <div class="metric-value" id="weekCO2">28.5</div>
+      <div class="metric-unit">kg CO₂</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Eco Score</div>
+      <div class="metric-value" style="color:var(--eco-green)">72</div>
+      <div class="metric-unit">/ 100</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Trees Saved</div>
+      <div class="metric-value" style="color:var(--eco-green-mid)">3.1</div>
+      <div class="metric-unit">equivalent</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-chart-pie" aria-hidden="true"></i> Category Breakdown</div>
+    <div class="progress-row">
+      <span class="progress-label">Travel</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:62%;background:#378ADD"></div></div>
+      <span class="progress-val">2.6 kg</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">Food</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:38%;background:#639922"></div></div>
+      <span class="progress-val">1.6 kg</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">Energy</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:24%;background:#EF9F27"></div></div>
+      <span class="progress-val">1.0 kg</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">Waste</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:12%;background:#D85A30"></div></div>
+      <span class="progress-val">0.5 kg</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-chart-bar" aria-hidden="true"></i> Weekly Trend</div>
+    <div class="week-toggle">
+      <button class="week-btn active" onclick="setWeekView(this,'daily')">Daily</button>
+      <button class="week-btn" onclick="setWeekView(this,'weekly')">Weekly</button>
+      <button class="week-btn" onclick="setWeekView(this,'monthly')">Monthly</button>
+    </div>
+    <div style="position:relative;height:160px;">
+      <canvas id="trendChart" role="img" aria-label="Weekly CO2 emissions bar chart"></canvas>
+    </div>
+  </div>
+
+  <div class="tree-counter">
+    <div class="tree-num">🌳 3.1</div>
+    <div class="tree-label">Trees worth of CO₂ you've offset this month</div>
+  </div>
+</div>
+
+<!-- LOG ACTIVITY -->
+<div id="page-log" class="page">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-plus" aria-hidden="true"></i> Log New Activity</div>
+    <div class="log-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="logCat">
+            <option value="travel">🚗 Travel</option>
+            <option value="food">🥗 Food</option>
+            <option value="energy">⚡ Energy</option>
+            <option value="waste">🗑️ Waste</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Activity</label>
+          <select id="logActivity">
+            <option value="car">Car (per km)</option>
+            <option value="bus">Bus (per km)</option>
+            <option value="flight">Flight (per km)</option>
+            <option value="bike">Bicycle</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Amount / Distance</label>
+          <input type="number" id="logAmount" placeholder="e.g. 15" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <select id="logUnit">
+            <option>km</option>
+            <option>hours</option>
+            <option>kg</option>
+            <option>kWh</option>
+          </select>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addEntry()">
+        <i class="ti ti-plus" aria-hidden="true"></i> Add to Today's Log
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-zap" aria-hidden="true"></i> Electricity Bill Calculator</div>
+    <div class="elec-row">
+      <div class="form-group elec-input">
+        <label>Monthly electricity bill (₹)</label>
+        <input type="number" id="elecBill" placeholder="e.g. 1500" />
+      </div>
+      <button class="calc-btn" onclick="calcElec()">Calculate CO₂</button>
+    </div>
+    <div class="result-box" id="elecResult"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-history" aria-hidden="true"></i> Today's Entries</div>
+    <div class="log-entries" id="logEntries">
+      <div class="log-entry">
+        <div class="log-entry-left">
+          <span class="log-cat cat-travel">Travel</span>
+          <span>Car ride — 15 km</span>
+        </div>
+        <span class="log-co2">2.1 kg</span>
+      </div>
+      <div class="log-entry">
+        <div class="log-entry-left">
+          <span class="log-cat cat-food">Food</span>
+          <span>Chicken meal</span>
+        </div>
+        <span class="log-co2">1.6 kg</span>
+      </div>
+      <div class="log-entry">
+        <div class="log-entry-left">
+          <span class="log-cat cat-energy">Energy</span>
+          <span>AC — 3 hrs</span>
+        </div>
+        <span class="log-co2">1.0 kg</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div id="page-goals" class="page">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-target" aria-hidden="true"></i> Active Goals</div>
+    <div class="goal-row">
+      <div class="goal-info">
+        <div class="goal-name">Reduce travel emissions</div>
+        <div class="goal-sub">Target: under 2 kg/day · 18 days streak</div>
+        <div style="margin-top:6px;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;">
+          <div style="width:72%;height:100%;background:var(--eco-blue);border-radius:3px;"></div>
+        </div>
+      </div>
+      <span class="goal-pct">72%</span>
+    </div>
+    <div class="goal-row">
+      <div class="goal-info">
+        <div class="goal-name">Plant-based meals 4x/week</div>
+        <div class="goal-sub">Target: 4 meals/week · 3 this week</div>
+        <div style="margin-top:6px;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;">
+          <div style="width:75%;height:100%;background:var(--eco-green-mid);border-radius:3px;"></div>
+        </div>
+      </div>
+      <span class="goal-pct">75%</span>
+    </div>
+    <div class="goal-row">
+      <div class="goal-info">
+        <div class="goal-name">Reduce electricity usage</div>
+        <div class="goal-sub">Target: under 5 kWh/day · 4.2 kWh avg</div>
+        <div style="margin-top:6px;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;">
+          <div style="width:84%;height:100%;background:var(--eco-amber);border-radius:3px;"></div>
+        </div>
+      </div>
+      <span class="goal-pct">84%</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-plus" aria-hidden="true"></i> Add New Goal</div>
+    <div class="log-form">
+      <div class="form-group">
+        <label>Goal description</label>
+        <input type="text" id="goalText" placeholder="e.g. Walk to work 3x per week" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select>
+            <option>Travel</option><option>Food</option><option>Energy</option><option>Waste</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target (kg CO₂ saved)</label>
+          <input type="number" placeholder="e.g. 5" />
+        </div>
+      </div>
+      <button class="add-btn" onclick="addGoal()">Set Goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- BADGES -->
+<div id="page-badges" class="page">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-award" aria-hidden="true"></i> Your Achievements</div>
+    <div class="badge-grid">
+      <div class="badge earned">
+        <div class="badge-icon">🌱</div>
+        <div class="badge-name">First Log</div>
+      </div>
+      <div class="badge earned">
+        <div class="badge-icon">🚶</div>
+        <div class="badge-name">Walker</div>
+      </div>
+      <div class="badge earned">
+        <div class="badge-icon">🥗</div>
+        <div class="badge-name">Green Eater</div>
+      </div>
+      <div class="badge badge-locked">
+        <div class="badge-icon">⚡</div>
+        <div class="badge-name">Energy Saver</div>
+      </div>
+      <div class="badge badge-locked">
+        <div class="badge-icon">🏆</div>
+        <div class="badge-name">Top 10</div>
+      </div>
+      <div class="badge badge-locked">
+        <div class="badge-icon">🌳</div>
+        <div class="badge-name">Tree Planter</div>
+      </div>
+      <div class="badge badge-locked">
+        <div class="badge-icon">🔥</div>
+        <div class="badge-name">30 Day Streak</div>
+      </div>
+      <div class="badge badge-locked">
+        <div class="badge-icon">🌍</div>
+        <div class="badge-name">Eco Champion</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center;margin-top:4px;">3 of 8 badges earned</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-flame" aria-hidden="true"></i> Streaks</div>
+    <div class="grid3">
+      <div class="metric-card">
+        <div class="metric-label">Daily Streak</div>
+        <div class="metric-value" style="color:var(--eco-amber)">18</div>
+        <div class="metric-unit">days</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Best Streak</div>
+        <div class="metric-value">24</div>
+        <div class="metric-unit">days</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">This Month</div>
+        <div class="metric-value" style="color:var(--eco-green)">92</div>
+        <div class="metric-unit">Eco Score</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="page-leaderboard" class="page">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-trophy" aria-hidden="true"></i> Community Leaderboard</div>
+    <div class="section-head">This Week's Top Eco Warriors</div>
+    <div class="lb-row">
+      <span class="lb-rank gold">🥇</span>
+      <span class="lb-name">Priya K.</span>
+      <span class="lb-score">98 pts</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-rank silver">🥈</span>
+      <span class="lb-name">Arjun M.</span>
+      <span class="lb-score">94 pts</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-rank bronze">🥉</span>
+      <span class="lb-name">Swetha R.</span>
+      <span class="lb-score">91 pts</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-rank" style="color:var(--color-text-secondary)">4</span>
+      <span class="lb-name">Karthik V.</span>
+      <span class="lb-score">88 pts</span>
+    </div>
+    <div class="lb-row lb-me">
+      <span class="lb-rank" style="color:var(--eco-green);font-weight:500">5</span>
+      <span class="lb-name" style="color:var(--eco-green);font-weight:500">You 👋</span>
+      <span class="lb-score">72 pts</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-rank" style="color:var(--color-text-secondary)">6</span>
+      <span class="lb-name">Divya S.</span>
+      <span class="lb-score">68 pts</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-rank" style="color:var(--color-text-secondary)">7</span>
+      <span class="lb-name">Ravi T.</span>
+      <span class="lb-score">61 pts</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-users" aria-hidden="true"></i> Your Stats vs Community</div>
+    <div class="grid2">
+      <div class="metric-card">
+        <div class="metric-label">Your Avg/Day</div>
+        <div class="metric-value">4.2</div>
+        <div class="metric-unit">kg CO₂</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Community Avg</div>
+        <div class="metric-value">6.8</div>
+        <div class="metric-unit">kg CO₂</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--eco-green);text-align:center;padding:4px 0;">
+      🎉 You emit 38% less than the community average!
+    </div>
+  </div>
+</div>
+
+<!-- AI TIPS -->
+<div id="page-ai" class="page">
+  <div class="ai-box">
+    <div class="ai-header">
+      <i class="ti ti-sparkles" aria-hidden="true"></i>
+      AI Green Suggestions — Based on your activity
+    </div>
+    <div class="ai-body">
+      <ul class="ai-suggestions">
+        <li>You drove 15 km today — switching to a bus for 3 days/week would save ~18 kg CO₂ monthly.</li>
+        <li>Your food footprint is mostly from meat. One more plant-based day/week saves ~4.8 kg CO₂.</li>
+        <li>Your AC usage peaks 2–5pm. Shifting by 1 hour could cut energy use by 20%.</li>
+        <li>Your travel emissions are above your goal. Try carpooling tomorrow to stay on track.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-head">Quick tips by category</div>
+  <div class="tip-card">
+    <div class="tip-title">🚗 Travel</div>
+    <div class="tip-text">Combine errands into one trip. Walking or cycling under 3 km saves ~0.5 kg CO₂ per trip.</div>
+  </div>
+  <div class="tip-card" style="background:var(--eco-green-light);border-left-color:var(--eco-green)">
+    <div class="tip-title" style="color:var(--eco-green)">🥗 Food</div>
+    <div class="tip-text">Buying local and seasonal produce reduces transport emissions by up to 70%.</div>
+  </div>
+  <div class="tip-card" style="background:var(--eco-amber-light);border-left-color:var(--eco-amber)">
+    <div class="tip-title" style="color:var(--eco-amber)">⚡ Energy</div>
+    <div class="tip-text">Switch to LED bulbs if you haven't — they use 75% less energy than traditional bulbs.</div>
+  </div>
+  <div class="tip-card" style="background:var(--eco-coral-light);border-left-color:var(--eco-coral)">
+    <div class="tip-title" style="color:var(--eco-coral)">🗑️ Waste</div>
+    <div class="tip-text">Composting food waste cuts methane emissions significantly from landfills.</div>
+  </div>
+
+  <button class="add-btn" style="margin-top:8px" onclick="sendPrompt('Give me more personalized eco tips based on my travel and food habits')">
+    Get personalized AI tips ↗
+  </button>
+</div>
+
+</div>
+
+
+
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
+
